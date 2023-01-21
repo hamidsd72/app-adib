@@ -5,11 +5,11 @@
         <div class="container">
             <div class="swiper-container">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide text-center pb-3">
-                        <div class="image-circle">
+                    <div class="swiper-slide text-center">
+                        <div class="image-circle m-0">
                             <figure class="background"><img src="{{ url($setting->logo_site) }}" alt="{{ $setting->title }}"></figure>
                         </div>
-                        <h4 class="mt-0 my-3">{{ $setting->title }}</h4>
+                        <h4>{{ $setting->title }}</h4>
                         <div class="text-center">
                             <p class="small-font text-secondary px-lg-4">{{$setting->description}}</p>
                         </div>

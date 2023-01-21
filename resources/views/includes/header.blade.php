@@ -13,60 +13,52 @@
         </div>
         <div class="ml-auto col-auto">
             <div class="d-flex">
-                <!-- Notificaiton -->
-               <div class="dropdown">
-                   <div class="badge-top-container pt-2 me-3" role="button" id="dropdownNotification" data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false">
-                       {{auth()->user()->unreadNotifications->count()}}
-                       <img src="https://img.icons8.com/external-icematte-lafs/28/000000/external-Messages-it-icematte-lafs.png"/>
-                   </div>
-                   <!-- Notification dropdown -->
-                   <div class="dropdown-menu dropdown-menu-right">
-                           @if(auth()->user()->unreadNotifications->count())
-                               <a href="javascript:void(0)" data-url="{{route('notification.read.all')}}" class="all_read_not">
-                                   <div class="d-flex dropdown-item text-center">
-                                       <div class="notification-details flex-grow-1">
-                                           <p class="text-small text-muted m-0">× خالی کردن نوتیفیکیشن ×</p>
-                                       </div>
-                                   </div>
-                               </a>
-                               @foreach(auth()->user()->unreadNotifications as $key=>$notification)
-                                   <a href="{{$notification->data['url'].'?id_not='.$notification->key}}" target="_blank">
-                                       <div class="dropdown-item d-flex">
-                                           <div class="notification-icon">
-                                               <i class="nav-icon i-Clock-Forward text-primary mr-1"></i>
-                                           </div>
-                                           <div class="notification-details flex-grow-1">
-                                               <p class="m-0 d-flex align-items-center">
-                                                   <span>{{$notification->data['title']??''}}</span>
-                                                   <span class="flex-grow-1"></span>
-                                                   <span class="text-small text-muted ml-auto">{{ g2j($notification->created_at,'Y/m/d H:i') }}</span>
-                                               </p>
-                                               <p class="text-small text-muted m-0">{{$notification->data['name']}}</p>
-                                           </div>
-                                       </div>
-                                   </a>
-                               @endforeach
-                           @else
-                               <div class="d-flex dropdown-item text-center">
-                                   <div class="notification-details flex-grow-1">
-                                       <p class="text-small text-muted m-0"> خالی می باشد!</p>
-                                   </div>
-                               </div>
-                           @endif
-   
-                       <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
-                           <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
-                       </div>
-                       <div class="ps__rail-y" style="top: 0px; right: -6px;">
-                           <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div>
-                       </div>
-                   </div>
-               </div>
-               <!-- Notificaiton End -->
-               <button class="menu-btn btn btn-link-default" type="button">
-                   <img src="https://img.icons8.com/ultraviolet/28/000000/line-width.png"/>
-               </button>
+                <div id="notify" class="dropdown">
+                    <div class="badge-top-container pt-2 me-2" role="button" id="dropdownNotification" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <img src="https://img.icons8.com/ultraviolet/26/appointment-reminders.png" alt="notification">
+                        {{auth()->user()->unreadNotify->count()}}
+                    </div>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        @if(auth()->user()->unreadNotify->count())
+                            <a href="javascript:void(0)" data-url="{{route('user.notification.read.all')}}" class="all_read_not">
+                                <div class="d-flex dropdown-item text-center">
+                                    <div class="notification-details flex-grow-1">
+                                        <p class="text-dark py-2 m-0">خالی کردن نوتیفیکیشن</p>
+                                    </div>
+                                </div>
+                            </a>
+                            @foreach(auth()->user()->unreadNotify as $key=>$notification)
+                                {{-- <a href="{{url('/').substr(json_decode($notification->data)->url,27,100).'?id_not='.$notification->key}}" target="_blank"> --}}
+                                <a href="{{json_decode($notification->data)->url.'?id_not='.$notification->key}}" target="_blank">
+                                    <div class="dropdown-item d-flex mt-2">
+                                        <div class="notification-details flex-grow-1">
+                                            <div class="d-flex">
+                                                <img src="https://img.icons8.com/ultraviolet/16/alarm.png" alt="notification">
+                                                <p class="m-0 ms-2 text-end">{{g2j($notification->created_at,'Y/m/d H:i')}}</p>
+                                            </div>
+                                            <p class="m-0 text-start text-dark">
+                                                {{json_decode($notification->data)->title}}
+                                                <br>
+                                                {{json_decode($notification->data)->name}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            @endforeach
+                        @else
+                            <div class="d-flex dropdown-item text-center">
+                                <div class="notification-details flex-grow-1">
+                                    <p class="text-small text-muted m-0"> خالی می باشد!</p>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+                <!-- Notificaiton End -->
+                <button class="menu-btn btn btn-link-default" type="button">
+                    <img src="https://img.icons8.com/ultraviolet/28/000000/line-width.png"/>
+                </button>
             </div>
         </div>
     </div>
@@ -92,35 +84,30 @@
                     پروفایل
                 </a>
             </li>
-
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('user.tickets') }}">
                     <i class="me-1 fa fa-edit"></i>
                     درخواست ها
                 </a>
             </li>
-
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('user.packages') }}">
                     <i class="me-1 fa fa-check-square"></i>
                     فعالیت ها
                 </a>
             </li>
-
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('user.notification.index') }}">
                     <i class="me-1 fa fa-envelope-open"></i>
                     پیام ها
                 </a>
             </li>
-
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('user.contact.show') }}">
                     <i class="mx-1 fa fa-info"></i>
                     درباره ما
                 </a>
             </li>
-
             <li class="nav-item">
                 <a class="nav-link" href="{{ env('LEARN_CHANNEL_URl') }}" target="_blank">
                     <i class="fa fa-desktop"></i>

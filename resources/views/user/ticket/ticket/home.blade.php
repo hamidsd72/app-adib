@@ -1,7 +1,7 @@
 @extends('user.master')
 @if(auth()->user()->role_id==9 || auth()->user()->role_id==2)
     @section('styles_meta')
-        <meta http-equiv="refresh" content="300">
+        <meta http-equiv="refresh" content="300" >
     @endsection
 @endif
 @section('content')
@@ -56,79 +56,51 @@
                     <div class="card-header bg-warning redu20">
                         <thead class="bg-warning"> 
                             <tr>
-                                @if(isset($invoices))
+                                {{-- @if(isset($invoices)) --}}
                                     <th class="text-center" data-toggle="true">شرکت</th>
-                                    <th class="text-center" data-hide="phone">اولویت</th>
+                                    {{-- <th class="text-center" data-hide="phone">اولویت</th> --}}
+                                    <th class="text-center" data-hide="phone">عنوان</th>
                                     <th class="text-center" data-hide="phone">پاسخ دهنده</th>
                                     <th class="text-center" data-hide="phone">وضعیت</th>
-                                @else
+                                {{-- @else
                                     <th class="text-center" data-hide="phone">شرکت</th>
                                     <th class="text-center" data-hide="phone">اولویت</th>
                                     <th class="text-center" data-hide="phone">تاریخ ثبت</th>
                                     <th class="text-center" data-hide="phone">وضعیت</th>
-                                @endif
+                                @endif --}}
                             </tr>
                         </thead>
                     </div>
                     <tbody>
                         @foreach($data as $data)
-                            @if($data->referred_to==auth()->user()->id)
-                                <tr style="background: {{ count($data->comments->where('confirmation',0)) ? 'antiquewhite' : '' }}">
-                                    <td>
-                                        <a href="#" onclick="openModal( '{{$data->ticket__title}}' , '{{$data->role()->description}}' , 
-                                        '{{my_jdate($data->updated_at,'d F Y').' '.$data->updated_at->format('H:i')}}' , '{{$data->referred()?$data->referred()->name:'______'}}' , '{{$data->id}}' )" 
-                                        class="btn btn-primary p-0 px-1">{{$data->user->company__name}}.. 
-                                        @if ($data->seen__id==0)
-                                            <div class="spinner-grow text-danger" role="status"><span class="sr-only"></span></div>
-                                        @endif
-                                    </td>
-                                    <td>{{$data->ticket__priority}}</td>
-                                    <td>{{$data->comments->count() ? $data->comments->last()->user->count() ? $data->comments->last()->user->name : '' : 'کاربر'}}</td>
-                                    <td><span class="">{{$data->ticket__status}}</span></td>
-                                </tr>
-                            @elseif(auth()->user()->role_id==1 || auth()->user()->role_id==8)
-                                <tr style="background: {{ count($data->comments->where('confirmation',0)) ? 'antiquewhite' : '' }}">
-                                    <td>
-                                        <a href="#" onclick="openModal( '{{$data->ticket__title}}' , '{{$data->role()->description}}' , 
-                                        '{{my_jdate($data->updated_at,'d F Y').' '.$data->updated_at->format('H:i')}}' , '{{$data->referred()?$data->referred()->name:'______'}}' , '{{$data->id}}' )" 
-                                        class="btn btn-primary p-0 px-1">{{$data->user->company__name}}.. 
-                                        @if ($data->seen__id==0)
-                                            <div class="spinner-grow text-danger" role="status"><span class="sr-only"></span></div>
-                                        @endif
-                                    </td>
-                                    <td>{{$data->ticket__priority}}</td>
-                                    <td>{{$data->comments->count() ? $data->comments->last()->user->count() ? $data->comments->last()->user->name : '' : 'کاربر'}}</td>
-                                    <td><span class="">{{$data->ticket__status}}</span></td>
-                                </tr>
-                            @elseif(auth()->user()->role_id==3 || auth()->user()->role_id==6 || auth()->user()->role_id==7)
-                                <tr style="background: {{ count($data->comments->where('confirmation',0)) ? 'antiquewhite' : '' }}">
-                                    <td>
-                                        <a href="#" onclick="openModal( '{{$data->ticket__title}}' , '{{$data->role()->description}}' , 
-                                        '{{my_jdate($data->updated_at,'d F Y').' '.$data->updated_at->format('H:i')}}' , '{{$data->referred()?$data->referred()->name:'______'}}' , '{{$data->id}}' )" 
-                                        class="btn btn-primary p-0 px-1">{{$data->user->company__name}}.. 
-                                        @if ($data->seen__id==0)
-                                            <div class="spinner-grow text-danger" role="status"><span class="sr-only"></span></div>
-                                        @endif
-                                    </td>
-                                    <td>{{$data->ticket__priority}}</td>
-                                    <td>{{$data->comments->count() ? $data->comments->last()->user->count() ? $data->comments->last()->user->name : '' : 'کاربر'}}</td>
-                                    <td><span class="">{{$data->ticket__status}}</span></td>
-                                </tr>
-                            @elseif(auth()->user()->role_id==2 || auth()->user()->role_id==9)
-                                <tr style="background: {{ count($data->comments->where('confirmation',0)) ? 'antiquewhite' : '' }}">
-                                    <td>
-                                        <a href="#" onclick="openModal( '{{$data->ticket__title}}' , '{{$data->role()->description}}' , 
-                                        '{{my_jdate($data->updated_at,'d F Y').' '.$data->updated_at->format('H:i')}}' , '{{$data->referred()?$data->referred()->name:'______'}}' , '{{$data->id}}' )" 
-                                        class="btn btn-primary p-0 px-1">{{$data->user->company__name}}.. 
-                                        @if ($data->seen__id==0)
-                                            <div class="spinner-grow text-danger" role="status"><span class="sr-only"></span></div>
-                                        @endif
-                                    </td>
-                                    <td>{{$data->ticket__priority}}</td>
-                                    <td>{{$data->comments->count() ? $data->comments->last()->user->count() ? $data->comments->last()->user->name : '' : 'کاربر'}}</td>
-                                    <td><span class="">{{$data->ticket__status}}</span></td>
-                                </tr>
-                            @endif
+                            <tr style="background: {{ count($data->comments->where('confirmation',0)) ? 'antiquewhite' : '' }}">
+                                <td>
+                                    <a href="#" onclick="openModal( '{{$data->ticket__priority}}' , '{{$data->role()->description}}' , 
+                                    '{{my_jdate($data->updated_at,'d F Y').' '.$data->updated_at->format('H:i')}}' , '{{$data->referred()?$data->referred()->name:'______'}}' , '{{$data->id}}' )" 
+                                    class="btn btn-primary p-0 px-1">{{$data->user->company__name}}.. 
+                                    @if ($data->seen__id==0)
+                                        <div class="spinner-grow text-danger" role="status"><span class="sr-only"></span></div>
+                                    @endif
+                                </td>
+                                <td>
+                                    <a href="#" class="btn @if($data->ticket__priority=='زیاد') btn-danger @elseif($data->ticket__priority=='متوسط') btn-warning @else btn-success @endif p-0 px-1">
+                                        {{$data->ticket__title}}
+                                    </a>
+                                </td>
+                                <td>
+                                    {{$data->comments->count() ? $data->comments->last()->user->count() ? $data->comments->last()->user->name : '' : 'کاربر'}}
+                                    <span class="text-danger fw-bold">
+                                        {{$data->contract_true=='no'?'(بدون قرارداد)':''}}
+                                    </span>
+                                </td>
+                                <td class="my-auto">
+                                    <div id="ticketStatus{{$data->id}}" >
+                                        <a href="#" class="pb-1 text-info border-info border-bottom" onclick="translateStatus('{{$data->id}}','{{$data->status}}')">
+                                            {{$data->ticket__status}}
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>
@@ -160,9 +132,9 @@
     <button id="openModal" type="button" style="display: none" data-bs-toggle="modal" data-bs-target="#myModal">Open</button>
 
     <script>
-        function openModal( title , roleName , updatedAt , referred , id ) {
+        function openModal( priority , roleName , updatedAt , referred , id ) {
             document.getElementById('openModal').click();
-            document.getElementById("titleItem").innerHTML = title;
+            document.getElementById("titleItem").innerHTML = ` اولویت : ${priority}`;
             document.getElementById("roleNameItem").innerHTML = ` بخش ${roleName}`;
             document.getElementById("referredItem").innerHTML = ` ارجاع به ${referred}`;
             document.getElementById("updatedAtItem").innerHTML = ` آخرین بروزرسانی ${updatedAt}`;
@@ -171,6 +143,9 @@
         function showItem() {
             let id  = document.getElementById("idItem").value;
             window.open( `/ticket/${id}` , '_blank');
+        }
+        function translateStatus( id , data ) {
+            document.getElementById(`ticketStatus${id}`).innerHTML = data;
         }
     </script>
 @endsection

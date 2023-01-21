@@ -20,7 +20,7 @@ class Comment extends Model {
     }
 
     public function libraries() {
-        return $this->morphMany('App\Model\Library', 'librariable');
+        return $this->hasMany('App\Model\Library', 'librariable_id')->where('librariable_type','App\Models\Comment');
     }
 
     public function ticket() {

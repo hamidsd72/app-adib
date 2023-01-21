@@ -139,9 +139,11 @@
                      <span class="help-block"><strong>{{$errors->first('comment__attachment')}}</strong></span>
                   @endif
                </div>
-
+               
                {{csrf_field()}}
-               <button type="submit" class="btn btn-success mt-3 {{ auth()->user()->role_id==4 && !$workTimesheet_doing?'startWork':'' }}"><i class="fa fa-check"></i>ارسال</button>
+               <button type="submit" class="btn btn-{{ auth()->user()->role_id==4 && !$workTimesheet_doing?'dark':'success' }} col-12 mt-3 " {{ auth()->user()->role_id==4 && !$workTimesheet_doing?'disabled':'' }}>
+                  <i class="fa fa-check mx-1"></i>ارسال
+               </button>
             </form>
 
             <div class="ticket-message">
@@ -164,7 +166,7 @@
                                  <p class="text-center">تعداد فایل های پیوست : {{$comment->libraries->count()}}</p>
                                  @foreach($comment->libraries as $library)
                                     <div class="comment_attach"><i class="fa fa-paperclip"></i>
-                                       <a href="{{str_replace('index.php/','',url($library->file__path))}}" target="_blank">مشاهده فایل پیوست</a>
+                                       <a href="https://support.adib-it.com/{{$library->file__path}}" target="_blank">مشاهده فایل پیوست</a>
                                     </div>
                                  @endforeach
                               @endif
@@ -192,7 +194,7 @@
                            <div class="card-body border-bottom">
                               <div class="d-flex">
                                  <img class="img-user" src="{{url( $comment->user->profile ?
-                                    is_file($comment->user->profile) ? url($comment->user->profile) : 'https://support.adib-it.com/'.$comment->user->profile
+                                    is_file($comment->user->profile) ? url($comment->user->profile) : 'https://https://support.adib-it.com/'.$comment->user->profile
                                      : 'https://img.icons8.com/ultraviolet/100/000000/test-account.png' )}}" alt="{{$comment->user->name}}">
                                  <div class="ms-3 fs-6 my-auto">
                                     {{$comment->user->name}} <br>
@@ -204,7 +206,7 @@
                                  <p class="text-center">تعداد فایل های پیوست : {{$comment->libraries->count()}}</p>
                                  @foreach($comment->libraries as $library)
                                     <div class="comment_attach"><i class="fa fa-paperclip"></i>
-                                       <a href="{{str_replace('index.php/','',url($library->file__path))}}" target="_blank">مشاهده فایل پیوست</a>
+                                       <a href="https://support.adib-it.com/{{$library->file__path}}" target="_blank">مشاهده فایل پیوست</a>
                                     </div>
                                  @endforeach
                               @endif
@@ -247,7 +249,7 @@
                                  @foreach($data->libraries as $library)
                                     <div class="comment_attach">
                                        <i class="fa fa-paperclip mx-1"></i>
-                                       <a href="{{str_replace('index.php/','',url($library->file__path))}}" target="_blank">مشاهده فایل پیوست</a>
+                                       <a href="https://support.adib-it.com/{{$library->file__path}}" target="_blank">مشاهده فایل پیوست</a>
                                     </div>
                                  @endforeach
                               @endif
@@ -275,7 +277,7 @@
                                  @foreach($data->libraries as $library)
                                     <div class="comment_attach">
                                        <i class="fa fa-paperclip mx-1"></i>
-                                       <a href="{{str_replace('index.php/','',url($library->file__path))}}" target="_blank">مشاهده فایل پیوست</a>
+                                       <a href="https://support.adib-it.com/{{$library->file__path}}" target="_blank">مشاهده فایل پیوست</a>
                                     </div>
                                  @endforeach
                               @endif
@@ -304,7 +306,7 @@
                               @foreach($data->libraries as $library)
                                  <div class="comment_attach">
                                     <i class="fa fa-paperclip mx-1"></i>
-                                    <a href="{{str_replace('index.php/','',url($library->file__path))}}" target="_blank">مشاهده فایل پیوست</a></div>
+                                    <a href="https://support.adib-it.com/{{$library->file__path}}" target="_blank">مشاهده فایل پیوست</a></div>
                               @endforeach
                            @endif
                         </div>
@@ -485,6 +487,13 @@
       </div>
    </div>
 
+   <script>
+      $(function(){
+          $("input[id='hour']").on('input', function (e) {
+              $(this).val($(this).val().replace(/[^0-9]/g, ''));
+          });
+      });
+  </script>
    <script>
       function activeComments($id) {
          document.getElementById("active_comment_form").action = `p-comment-confirm/${$id}`;

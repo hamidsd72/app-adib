@@ -38,6 +38,14 @@ class TodoList extends Model {
         return $this->belongsTo('App\User', 'user_group_id');
     }
 
+    public function checks() {
+        return $this->hasMany('App\Model\TodoListReportChek', 'todo_list_id');
+    }
+    
+    public function keywords() {
+        return $this->hasMany('App\Model\TodoListKeyword', 'todo_list_id');
+    }
+
     public static function group_ref_user_percent($id,$user_id,$type) {
         $all=TodoListRefUser::where('cat_id',$id)->count();
         $item=TodoListRefUser::where('cat_id',$id)->where('user_id',$user_id)->first();

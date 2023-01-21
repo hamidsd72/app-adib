@@ -103,7 +103,7 @@
                             <span class="image-boxed text-white">
                                 <img src="https://img.icons8.com/external-icematte-lafs/62/000000/external-Calendar-it-icematte-lafs.png"/>
                             </span>
-                            <span class="pt-2 h6">مرخصی</span>
+                            <span class="pt-2 h6">ثبت مرخصی</span>
                         </label>
                     </div>
                     <div class="col-6 col-md-3 px-2 mb-3" onclick="location.href = '{{route('user.my_leave')}}';">
@@ -157,43 +157,31 @@
             @unless (auth()->user()->sorted_tickets()->count())
                 <h6 class="text-center mb-2">موردی یافت نشد</h6>
             @endunless
-            @foreach(auth()->user()->sorted_tickets()->take(10) as $work)
+            @foreach(auth()->user()->sorted_tickets()->take(10) as $data)
                 <div class="card product-card-small mb-0">
                     <div class="card-body pt-0">
-                        <div class="p-3 border redu30">
+                        <div class="p-2 px-3 border redu30">
                             <div class="row mb-0">
-                                <div class="col">{{$data->user->company__name}}</div>
+                                <div class="col fs-6">{{$data->user->company__name}}</div>
                                 <div class="col-auto">
                                     @if ($data->seen__id==0)
                                         <div class="spinner-grow text-danger" role="status"><span class="sr-only"></span></div>
                                     @endif
                                 </div>
                                 <div class="col-lg-12">
-                                    <p class="m-0 fs-6">{{$data->ticket__title}}</p>
+                                    <div class="my-1">
+                                        <a href="{{route('user.ticket.show',$data->id)}}" class="redu-10 p-1 px-2 btn 
+                                            @switch($data->ticket__priority)
+                                                @case ('high') btn-danger @break;
+                                                @case ('normal') btn-warning @break;
+                                                @case ('low') @break; btn-success
+                                            @endswitch
+                                            ">
+                                            <p class="p-0 text-light fw-bold">{{$data->ticket__title}} >> </p>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-
-                            <hr>
-
-                            <div class="row mb-0">
-                                <div class="col">
-                                    @switch($data->ticket__priority)
-                                        @case ('high')
-                                            <span class="bg-secondary p-1 px-3 redu20 text-light">ز</span>
-                                            @break;
-                                        @case ('normal')
-                                            <span class="bg-secondary p-1 px-3 redu20 text-light">م</span>
-                                            @break;
-                                        @case ('low')
-                                            <span class="bg-secondary p-1 px-3 redu20 text-light">ک</span>
-                                            @break;
-                                    @endswitch
-                                </div>
-                                <div class="col-auto">
-                                    <a href="{{route('user.ticket.show',$data->id)}}" class="btn btn-info p-0 px-3">بررسی تیکت</a>
-                                </div>
-                            </div>
-
                         </div>
                     </div>
                 </div>

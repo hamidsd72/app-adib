@@ -14,6 +14,7 @@ use Mail;
 use Carbon\Carbon;
 use App\Model\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class TicketController extends Controller {
 
@@ -51,18 +52,18 @@ class TicketController extends Controller {
                 return $ticket__status;
                 break;
         }
-    }
+    }    
         
     public function ticketPriority($ticket__priority) {
         switch ($ticket__priority) {
             case 'high':
-                return 'ز';
+                return 'زیاد';
                 break;
             case 'normal':
-                return 'م';
+                return 'متوسط';
                 break;
             case 'low':
-                return 'ک';
+                return 'کم';
                 break;
             default:
                 return $ticket__priority;
@@ -123,10 +124,11 @@ class TicketController extends Controller {
 
                     $file = $image;
                     $originalName = $file->getClientOriginalName();
-                    $destinationPath = 'uploads/libraries/tickets/';
+                    $destinationPath = 'libraries/tickets/';
                     $extension = $file->getClientOriginalExtension();
                     $fileName = 'tikcet-' . md5(time() . '-' . $originalName) . '.' . $extension;
-                    $file->move($destinationPath, $fileName);
+                    Storage::disk('adib-support')->putFileAs( env('UPLOAD_PATH_BASE').$destinationPath , $file , $fileName );
+                    // $file->move($destinationPath, $fileName);
                     $f_path = $destinationPath . "" . $fileName;
                     $library = new Library();
                     $library->file__path = $f_path;
@@ -281,14 +283,15 @@ class TicketController extends Controller {
     }
 
     public function index() {
-
-        $data = Ticket::whereIN('ticket__status',['pending','doing','waiting_answered','answered_doning'])->orderByDesc('updated_at')->with([
-            'comments',
-            'user'
-        ])->get();
+        if ( in_array( auth()->user()->role_id , [1,2,3,6,7,8,9] ) ) {
+            $data = Ticket::whereIN('ticket__status',['pending','doing','waiting_answered','answered_doning'])->orderByDesc('updated_at')->with([ 'comments' , 'user' ])->get();
+        } else {
+            $data = Ticket::whereIN('ticket__status',['pending','doing','waiting_answered','answered_doning'])->where('referred_to',auth()->user()->id)
+            ->orderByDesc('updated_at')->with([ 'comments' , 'user' ])->get();
+        }
 
         foreach ($data as $d) {
-            $d->ticket__status   = $this->ticketStatus($d->ticket__status);
+            $d->status   = $this->ticketStatus($d->ticket__status);
             $d->ticket__priority = $this->ticketPriority($d->ticket__priority);
         }
 
@@ -450,15 +453,15 @@ class TicketController extends Controller {
                     foreach ($request->comment__attachment as $image) {
                         $file = $image;
                         $originalName = $file->getClientOriginalName();
-                        $destinationPath = 'uploads/libraries/tickets/';
+                        $destinationPath = 'libraries/tickets';
                         $extension = $file->getClientOriginalExtension();
                         $fileName = 'tikcet-' . md5(time() . '-' . $originalName) . '.' . $extension;
-                        $file->move($destinationPath, $fileName);
+                        Storage::disk('adib-support')->putFileAs( env('UPLOAD_PATH_BASE').$destinationPath , $file , $fileName );
+                        // $file->move($destinationPath, $fileName);
                         $f_path = $destinationPath . "" . $fileName;
                         $library = new Library();
                         $library->file__path = $f_path;
                         $ticket->libraries()->save($library);
-
                     }
                 } catch (\Exception $e) {
                     abort(500);
@@ -545,21 +548,20 @@ class TicketController extends Controller {
         $this->validate($request, [
             'comment__content' => 'required'
         ]);
-
+        
         $ticket = Ticket::where('id', $request->ticket__id)->first();
         $user = auth()->user();
         $user_id = $user->id;
         $role_id = $user->role_id;
-
+        
         $today = Carbon::now();
         $date = $today->format('Y-m-d');
-
+        
         $workTimesheet_doing = WorkTimesheet::WorkTimeSheetByStatus('ticket', $ticket->id, 'doing');
 
         if ($role_id == 4 && !$workTimesheet_doing) {
             return Redirect()->back()->with('err_message', 'ابتدا کار را شروع نمایید تا ساعت کار مربوطه به آن ثبت شود');
         }
-
         // ثبت و جمع ساعت کاری
         $hour = Hour::where('ticket_id', $ticket->id)->first();
         if (!$hour) {
@@ -580,6 +582,7 @@ class TicketController extends Controller {
 
         $comment->user__id = $user_id;
         $comment->comment__content = $request->comment__content;
+        $comment->commendable_type =  'App\Models\Ticket';
         if ($role_id == 4) {
             $ticket->referred_to = 111;
             $ticket->touch();
@@ -593,24 +596,25 @@ class TicketController extends Controller {
 
         if ($request->hasFile('comment__attachment')) {
 
-            //    try {
-            foreach ($request->comment__attachment as $image) {
+            try {
+                foreach ($request->comment__attachment as $image) {
 
-                $file = $image;
-                $originalName = $file->getClientOriginalName();
-                $destinationPath = 'uploads/libraries/tickets/';
-                $extension = $file->getClientOriginalExtension();
-                $fileName = 'tikcet-' . md5(time() . '-' . $originalName) . '.' . $extension;
-                $file->move($destinationPath, $fileName);
-                $f_path = $destinationPath . "" . $fileName;
-                $library = new Library();
-                $library->file__path = $f_path;
-                $comment->libraries()->save($library);
+                    $file = $image;
+                    $originalName = $file->getClientOriginalName();
+                    $destinationPath = 'libraries/tickets/';
+                    $extension = $file->getClientOriginalExtension();
+                    $fileName = 'tikcet-' . md5(time() . '-' . $originalName) . '.' . $extension;
+                    Storage::disk('adib-support')->putFileAs( env('UPLOAD_PATH_BASE').$destinationPath , $file , $fileName );
+                    // $file->move($destinationPath, $fileName);
+                    $f_path = $destinationPath . "" . $fileName;
+                    $library = new Library();
+                    $library->file__path = $f_path;
+                    $comment->libraries()->save($library);
 
+                }
+            } catch (\Exception $e) {
+                dd($e);
             }
-            //    } catch (\Exception $e) {
-            //        abort(500);
-            //    }
         }
         $date = $ticket->updated_at;
         $timestamp = (strtotime($date));

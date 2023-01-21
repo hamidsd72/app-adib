@@ -1,16 +1,6 @@
 <!DOCTYPE HTML>
 <html lang="en" dir="rtl">
 @include('includes.head')
-<style>
-    body { max-width: 540px; } 
-    .select2-container .select2-selection--single {height: 38px;}
-    .select2-container--default .select2-selection--single .select2-selection__rendered {line-height: 36px;}
-    .select2-container--open .select2-dropdown--below {z-index: 9999 !important;}
-    .select2-container {width: 100% !important;}
-    .accordion-button::after { margin: unset; position: absolute; right: 16px; width: 1rem; height: 1rem; background-size: 1rem; }
-    .flash_message { position: absolute; top: 3%; z-index: 9; width: 100%; padding: 0px 5%; }
-    .spinner-grow { width: 1rem; height: 1rem; animation: 1s linear infinite spinner-grow; }
-</style>
 <body class="theme-light body-scroll d-flex flex-column h-100 menu-overlay m-auto" data-highlight="highlight-red" data-gradient="body-default">
     <div id="page" >
         
@@ -61,12 +51,11 @@
                         {{-- <form action="{{route('user.work-stop')}}" method="post" class="m-0"> --}}
                         <form action="{{route('user.timesheet-stop')}}" method="post" class="m-0">
 
-                            <button @if($runningJob->work()->first('type')->type=='outwork') type="button" data-bs-toggle="modal" data-bs-target="#finishWorkTime"
-                                 @else type="submit" @endif class="btn bg-danger text-light py-1" id="runningJobStoped">
-                                 <div class="row m-0">
-                                     <div id="runningJobTimer" class="col-auto  p-0text-light"></div>
-                                     <div class="col-auto p-0">اتمام کار<i class="fa fa-refresh fa-spin ms-1"></i></div>
-                                 </div>
+                            {{-- <button @if($runningJob->work()->first('type')->type=='outwork') type="button" data-bs-toggle="modal" data-bs-target="#finishWorkTime"
+                                 @else type="submit" @endif class="btn bg-danger text-light py-1" id="runningJobStoped"> --}}
+                            <button type="submit" class="btn bg-danger text-light py-1 px-2" id="runningJobStoped">
+                                    <div id="runningJobTimer" class="text-light"></div>
+                                    <div>اتمام کار<i class="fa fa-refresh fa-spin ms-1"></i></div>
                             </button>
 
                             {{-- <input type="hidden" value="{{$runningJob->type_id}}" name="id"> --}}

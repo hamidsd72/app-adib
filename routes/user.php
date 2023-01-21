@@ -170,3 +170,5 @@ Route::resource('todo-list', 'TodoList\TodoListController');
 Route::get('todo-list/{id}/status/{type}', 'TodoList\TodoListController@status')->name('todo.list.status');
 Route::post('todo-list/{id}/report/{type}', 'TodoList\TodoListController@report')->name('todo.list.report');
 Route::post('todo-list/{id}/ref', 'TodoList\TodoListController@ref')->name('todo.list.ref');
+
+Route::get('notification-read/all', 'PanelController@read_notifity')->name('notification.read.all');

@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Hour extends Model {
     
-    protected $table = 'albums';
+    protected $table = 'adib_it_hours';
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 

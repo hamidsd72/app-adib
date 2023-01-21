@@ -37,7 +37,8 @@ class Ticket extends Model {
     }
 
     public function libraries() {
-        return $this->morphMany('App\Model\Library', 'librariable');
+        return $this->hasMany('App\Model\Library', 'librariable_id')->where('librariable_type','App\Models\Ticket');
+        // return $this->morphMany('App\Model\Library', 'librariable');
     }
 
     public function comments() {

@@ -13,7 +13,12 @@ class TodoListCat extends Model {
     public function todo_lists() {
         return $this->hasMany('App\Model\TodoList', 'cat_id');
     }
-
+    public function todo_list_checks() {
+        return $this->hasMany('App\Model\TodoListChek', 'cat_id');
+    }
+    public function todo_list_key_word() {
+        return $this->hasOne('App\Model\TodoListChek', 'cat_id')->where('tab_id',0);
+    }
     public function users_cc() {
         return $this->hasMany('App\Model\TodoListUser', 'cat_id');
     }

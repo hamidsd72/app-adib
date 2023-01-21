@@ -27,11 +27,23 @@ use App\Model\ServicePackagePrice;
 use Illuminate\Support\Facades\Auth;
 use App\Model\Contact;
 use App\Model\Work;
+use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller {
     
     public function __construct() {
        $this->middleware('auth');
+    }
+    function testuplo(Request $request) {
+        try {
+            $file = $request->image;
+            $path = 'testuplo/files';
+            $fileName = time().'.'.$file->getClientOriginalExtension();
+            Storage::disk('adib-support')->putFileAs( env('UPLOAD_PATH_BASE').$path , $file , $fileName );
+            return true;
+        } catch (\Throwable $th) {
+            dd($th);
+        }
     }
     function fa_number($number) {
         $arr = array();

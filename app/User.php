@@ -82,12 +82,13 @@ class User extends Authenticatable {
 
     public function tickets()
     {
-        return $this->hasMany('App\Model\Ticket', 'user__id');
+        // return $this->hasMany('App\Model\Ticket', 'user__id');
+        return $this->hasMany('App\Model\Ticket', 'referred_to')->where('ticket__status','doing');
     }
 
     public function sorted_tickets()
     {
-        return $this->hasMany('App\Model\Ticket', 'user__id')->orderBy('seen__id')->get();
+        return $this->hasMany('App\Model\Ticket', 'referred_to')->where('ticket__status','doing')->orderBy('seen__id')->get();
     }
 
     public function comments()
@@ -150,6 +151,18 @@ class User extends Authenticatable {
     public function userSeo()
     {
         return $this->hasMany('App\Model\UserSeo', 'user_id');
+    }
+
+    public function readNotify()
+    {
+        return $this->hasMany('App\Model\Notification','notifiable_id')->whereNotNull('read_at')
+        ->where('type','App\Notification\TodoList\TodoListNotification')->where('notifiable_type','App\Models\User');
+    }
+
+    public function unreadNotify()
+    {
+        return $this->hasMany('App\Model\Notification','notifiable_id')->whereNull('read_at')
+        ->where('type','App\Notification\TodoList\TodoListNotification')->where('notifiable_type','App\Models\User');
     }
 
     // public function hasRole($roles)
